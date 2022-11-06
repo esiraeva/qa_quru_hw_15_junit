@@ -20,7 +20,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class WebTest {
 
     @ValueSource(strings = {"royal canin", "whiskas"})
-    @ParameterizedTest(name = "Проверка наличия названия искомого товара в описании карточек в результатах поиска {0}")
+    @ParameterizedTest(name = "The name of the product is in the description of the cards {0}")
      void aliExpressSearch(String testData)
     {
         open("https://aliexpress.ru/");
@@ -29,15 +29,15 @@ public class WebTest {
     }
 
     @CsvSource(value = {
-            "шапка, Бесплатная доставка",
-            "шарф, Бесплатная доставка"
+            "С€Р°РїРєР°, Р‘РµСЃРїР»Р°С‚РЅР°СЏ РґРѕСЃС‚Р°РІРєР°",
+            "С€Р°СЂС„, Р‘РµСЃРїР»Р°С‚РЅР°СЏ РґРѕСЃС‚Р°РІРєР°"
     })
-    @ParameterizedTest(name = "Проверка фильтра Бесплатная доставка {0}")
+    @ParameterizedTest(name = "checking for the presence of an attribute in the search results {0}")
     void aliExpressDelivery(String searchQuery, String expectedText) {
         open("https://aliexpress.ru/");
         $("#searchInput").setValue(searchQuery).pressEnter();
         $("div.SnowSearchFilter_SortPanel__view__1rp0i").click();
-        $(By.xpath("//span[contains(text(), 'Бесплатная доставка')]")).click();
+        $(By.xpath("//span[contains(text(), 'Р‘РµСЃРїР»Р°С‚РЅР°СЏ РґРѕСЃС‚Р°РІРєР°')]")).click();
         $("div.product-snippet_ProductSnippet__name__1ettdy").shouldHave(text(searchQuery));
         $("div.snow-price_SnowPrice__blockFreeDelivery__18x8np").shouldHave(text(expectedText));
     }
@@ -45,13 +45,12 @@ public class WebTest {
 
     static Stream<Arguments> rtSiteButtonsTextDataProvider() {
         return Stream.of(
-                //Arguments.of(List.of("Actualit?", "France", "International",  "Economie", "Tribunes", "Magazines", "Documentaires", "Vid?os", "RT360"), Locale.FR),
                 Arguments.of(List.of("Aktuell", "Analyse", "Meinung", "Videos", "In eigener Sache", "Karriere"), Locale.DE)
         );
     }
 
     @MethodSource("rtSiteButtonsTextDataProvider")
-    @ParameterizedTest(name = "Проверка отображения названия кнопок для локали: {1}")
+    @ParameterizedTest(name = "Checking the display of button names for the locale: {1}")
     void rtSiteButtonsText(List<String> buttonsTexts, Locale locale) {
         open("https://www.rt.com/");
         $$(".langs a"  ).find(text(locale.name())).click();
